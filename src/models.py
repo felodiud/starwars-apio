@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
-
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 
 # class User(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
@@ -21,12 +20,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class Character(db.Model):
-    __tablename__= 'character'
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(200), nullable = False)
-    jedi = db.Column(db.Boolean, nullable = False)
-    origin = db.Column(db.String(200), nullable = False)
+    __tablename__ = 'character'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    jedi = db.Column(db.Boolean, nullable=False)
+    origin = db.Column(db.String(200), ForeignKey('planet.name'))
+    planet = db.relationship(db.Planet)
 
     def to_dict(self):
         return {
@@ -35,9 +36,17 @@ class Character(db.Model):
             "origin": self.origin,
             "jedi": self.origin,
         }
-    
+
+
 class Planet(db.Model):
     __tablename__ = "planet"
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(200), nullable = False)
-    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    population = db.Column(db.Integer, nullable=False)
+
+    def to_dic(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "population": self.population,
+        }
